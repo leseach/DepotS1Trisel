@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<Camion>
+    <Date>15/07/2015</Date>
+     <Levee>
+        <poubelle>pb1</poubelle>
+        <poids>12.5</poids>
+     </Levee>
+      <Levee>
+        <poubelle>pb2</poubelle>
+        <poids>5</poids>
+     </Levee>
+</Camion>
