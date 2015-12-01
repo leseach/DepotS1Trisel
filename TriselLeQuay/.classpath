@@ -4,5 +4,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="Z:/Acours2015-2016/BTS2/SLAM4/librairieTrisel/jdom-2.0.3/jdom-2.0.3.jar"/>
+	<classpathentry kind="lib" path="lib/mysql-connector-java-3.1.14-bin.jar"/>
+	<classpathentry kind="lib" path="R:/STS/STS2/SLAM4/Trisel/librairie/iText/itextpdf-5.5.6.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

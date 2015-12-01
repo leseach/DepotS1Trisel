@@ -1,13 +1,18 @@
 package com.util;
 
 import java.io.*;
-import java.io.IOException;
 import java.util.List;
+
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 
+import com.metier.Levee;
+import com.persistance.LeveeDAO;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 public class InsertionLevee {
 	
 	public static void traitementLevee()  {
@@ -67,32 +72,59 @@ public class InsertionLevee {
 	}
 
 	private static void traitementFichierTexte(String cheminLevee) {
+		
+		String ligne = null;
+		String date = null;
+		java.util.Date laDate = null;
+		String data[] = null;
+		String idPoubelle= null;
+		double poids = 0 ;
+		Levee l = null;
+		LeveeDAO lDAO = new LeveeDAO();
+
+		// format de la date en français
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
 		// instanciation d'un objet fichier texte
 		FichierTexte ft = new FichierTexte();
 		// ouverture du fichier en lecture
 		ft.openFileReader(cheminLevee);
-		// lecture de la première  ligne
 		// on récupère la date sous forme d'une chaine  
-		String date = ft.readLigne();
-		System.out.println("ligne 1 date :" + date );
-		// parcours des lignes levee
-		String ligne;
-		String data[] = null;
-		// parcours tant qu'il y a des lignes   à  lire , retour de readLigne à null en fin de fichier
-		while ((ligne = ft.readLigne()) != null) {
-			// extraction des données séparateur : par un split dans un tableau de chaine
-			data = ligne.split(":");
-			// on affiche les données du tableau
-			System.out.println(" code habitation: " + data[0]);
-			System.out.println("code poubelle : " + data[1]);
-			System.out.println(" quantité pesée " + data[2]);
+		date = ft.readLigne();
+		try {
+			// conversion de la chaine en date java.util
+			laDate = sdf.parse(date);
+			// parcours des lignes levee
+			// parcours tant qu'il y a des lignes   à  lire 
+			//  retour de readLigne à null en fin de fichier
+			while ((ligne = ft.readLigne()) != null) {
+				// extraction des données séparateur : par un split dans un tableau de chaine
+				data = ligne.split(":");
+				// conversion des données en fonction du type attendu par le constructeur
+				poids = Double.parseDouble(data[2]);
+				idPoubelle = data[1];
+				// instanciation objet levée
+				l = new Levee(laDate, poids, idPoubelle);
+				lDAO.create(l);
+			} 
 		}
-		ft.closeFileReader();
+		catch (ParseException e) {
+		}
+		finally {
+			ft.closeFileReader();
+		}
 	}
 	
 	private  static boolean traitementFichierXml(String cheminLevee) {
-
-		boolean ok = true;//déclaration document xml
+		boolean ok = true;
+		java.util.Date laDate = null;
+		String idPoubelle= null;
+		double poids = 0 ;
+		Levee l = null;
+		LeveeDAO lDAO = new LeveeDAO();
+		// format de la date en français
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		//déclaration document xml
 		Document document =  null;
 		// déclaration élément racine
 		Element racine = null;
@@ -107,27 +139,33 @@ public class InsertionLevee {
 			racine = document.getRootElement();
 			// récupération de l'élément date
 			Element ladate = racine.getChild("Date");
-			System.out.println("date: " + ladate.getText());
+			// conversion de la chaine en date java.util
+			laDate = sdf.parse(ladate.getText());
 			//On crée une Liste contenant tous les noeuds "Levee"
 			List<Element> listeLevee = racine.getChildren("Levee");
 			// parcours des levées
 			for (Element e: listeLevee)
 			{
 				// on récupère le numéro de poubelle
-				System.out.println("code poubelle : " + e.getChild("poubelle").getText());
+				idPoubelle = e.getChild("poubelle").getText();
 				// on récupère  le poids 
-				System.out.println("quantité : " + e.getChild("poids").getText());
+				poids = Double.parseDouble(e.getChild("poids").getText());
+				// instanciation objet levée
+				l = new Levee(laDate, poids, idPoubelle);
+				lDAO.create(l);
 			} 
-		} catch (JDOMException e2) { 
+		}
+		catch (ParseException e) {
+			ok = false;	
+			}
+		catch (JDOMException e2) { 
 			document = null;
 			f = null;
-			
 			ok = false;// erreur de parsage du fichier
-			//e2.printStackTrace();
-		} catch (IOException e2) {// erreur fichier non trouvé
+			}
+		catch (IOException e2) {// erreur fichier non trouvé
 			ok = false;
-			//e2.printStackTrace();
-		}
+			}
 		return ok;
 	}
 }
