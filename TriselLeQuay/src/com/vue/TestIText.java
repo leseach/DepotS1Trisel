@@ -9,6 +9,7 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.pdf.*;
 
 public class TestIText {
 
@@ -24,7 +25,7 @@ public class TestIText {
 		            ancre.setReference ( 
 		            "http://tutorials.jenkov.com/java-itext/index.html"); 
 		            document.add(ancre);
-PdfTable table = new PdfTable(3);
+		            PdfPTable table = new PdfPTable(3);
 
 			document.close ();
 			Runtime.getRuntime().exec("explorer.exe " + "HelloWorld.pdf");
