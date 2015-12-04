@@ -28,7 +28,7 @@ import com.metier.Usager;
 import com.util.Parametre;
 
 public class EditionFacture {
-	private static final String out = "FactureHabInd.pdf";
+	
 
 	private static final double tauxTva  = 20.6;
 	private static String nomFichier = null;

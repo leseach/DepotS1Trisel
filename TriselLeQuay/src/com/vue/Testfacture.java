@@ -8,6 +8,7 @@ import com.metier.Habitation;
 import com.metier.Levee;
 import com.metier.Poubelle;
 import com.metier.Usager;
+import com.pdf.EditionFacture;
 import com.persistance.HabitationDAO;
 public class Testfacture {
 	private static final String  tabMois[]={"","janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre" };
@@ -16,7 +17,7 @@ public class Testfacture {
 		ArrayList<Habitation> lesHabitations = HabitationDAO.retrieve();
 		if(lesHabitations.size() != 0){
 			for(Habitation h : lesHabitations){
-				editionElementFactureV2(h, an, mois);
+			EditionFacture.editionFactureIndividuelle(h, mois, an);
 			}
 		}
 	}
